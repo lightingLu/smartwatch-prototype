@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>守护宝贝 - 家长端首页</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif; background: #F5F7FA; }
+        .phone { max-width: 414px; margin: 0 auto; background: #F5F7FA; min-height: 100vh; position: relative; }
+        
+        /* 状态栏 */
+        .status-bar { height: 44px; background: #4A90D9; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px 0; color: #fff; font-size: 14px; font-weight: 600; }
+        
+        /* 头部 */
+        .header { background: linear-gradient(135deg, #4A90D9, #357ABD); padding: 15px 20px 30px; color: #fff; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .header-title { font-size: 18px; font-weight: 600; }
+        .header-icon { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        
+        /* 孩子信息 */
+        .child-info { display: flex; align-items: center; gap: 15px; }
+        .child-avatar { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #FFD93D, #F5A623); display: flex; align-items: center; justify-content: center; font-size: 30px; border: 3px solid rgba(255,255,255,0.3); }
+        .child-name { font-size: 20px; font-weight: 600; margin-bottom: 5px; }
+        .child-status { display: flex; align-items: center; gap: 6px; font-size: 13px; opacity: 0.9; }
+        .status-dot { width: 8px; height: 8px; background: #7ED321; border-radius: 50%; animation: blink 2s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        
+        /* 内容区 */
+        .content { padding: 0 15px 100px; margin-top: -15px; }
+        
+        /* 位置卡片 */
+        .location-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.08); margin-bottom: 15px; }
+        .map-area { height: 160px; background: linear-gradient(135deg, #E8F4FD, #D4E9F7); position: relative; display: flex; align-items: center; justify-content: center; }
+        .map-marker { position: absolute; width: 44px; height: 44px; background: #4A90D9; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(74,144,217,0.4); }
+        .map-marker::after { content: '👦'; transform: rotate(45deg); font-size: 22px; }
+        .location-info { padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .location-text h3 { font-size: 15px; color: #333; margin-bottom: 4px; }
+        .location-text p { font-size: 12px; color: #999; }
+        .nav-btn { width: 44px; height: 44px; background: #4A90D9; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 20px; }
+        
+        /* 功能网格 */
+        .features { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 15px; }
+        .feature { background: #fff; border-radius: 14px; padding: 15px 5px; text-align: center; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .feature-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 8px; }
+        .feature-icon.blue { background: linear-gradient(135deg, #4A90D9, #357ABD); }
+        .feature-icon.green { background: linear-gradient(135deg, #7ED321, #6BC01A); }
+        .feature-icon.orange { background: linear-gradient(135deg, #F5A623, #E09400); }
+        .feature-icon.red { background: linear-gradient(135deg, #D0021B, #B8001A); }
+        .feature-icon.purple { background: linear-gradient(135deg, #9013FE, #7B0FE0); }
+        .feature-icon.cyan { background: linear-gradient(135deg, #50E3C2, #3BD4B3); }
+        .feature-icon.pink { background: linear-gradient(135deg, #FF6B9D, #E85A8A); }
+        .feature-icon.gray { background: linear-gradient(135deg, #9B9B9B, #7A7A7A); }
+        .feature-name { font-size: 12px; color: #333; font-weight: 500; }
+        
+        /* 统计卡片 */
+        .stats-card { background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-bottom: 15px; }
+        .stats-title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 15px; }
+        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 24px; font-weight: 700; color: #4A90D9; margin-bottom: 4px; }
+        .stat-label { font-size: 12px; color: #999; }
+        
+        /* 底部导航 */
+        .tab-bar { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 414px; height: 84px; background: #fff; border-top: 1px solid #eee; display: flex; justify-content: space-around; align-items: flex-start; padding-top: 8px; }
+        .tab-item { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 5px 15px; }
+        .tab-icon { font-size: 24px; }
+        .tab-label { font-size: 11px; color: #999; }
+        .tab-item.active .tab-icon { color: #4A90D9; }
+        .tab-item.active .tab-label { color: #4A90D9; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="phone">
+        <div class="status-bar">
+            <span>10:30</span>
+            <span>📶 5G 🔋</span>
+        </div>
+        
+        <div class="header">
+            <div class="header-top">
+                <span class="header-title">守护宝贝</span>
+                <div class="header-icon">➕</div>
+            </div>
+            <div class="child-info">
+                <div class="child-avatar">👦</div>
+                <div>
+                    <div class="child-name">小明</div>
+                    <div class="child-status">
+                        <span class="status-dot"></span>
+                        <span>在线 · 电量 85%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="location-card">
+                <div class="map-area">
+                    <div class="map-marker"></div>
+                </div>
+                <div class="location-info">
+                    <div class="location-text">
+                        <h3>📍 北京市朝阳区实验小学</h3>
+                        <p>更新于 2 分钟前</p>
+                    </div>
+                    <div class="nav-btn">🧭</div>
+                </div>
+            </div>
+            
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon blue">📞</div>
+                    <div class="feature-name">通话</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon green">💬</div>
+                    <div class="feature-name">语聊</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon orange">📍</div>
+                    <div class="feature-name">轨迹</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon red">🆘</div>
+                    <div class="feature-name">SOS</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon purple">📱</div>
+                    <div class="feature-name">应用</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon cyan">🏃</div>
+                    <div class="feature-name">健康</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon pink">⏰</div>
+                    <div class="feature-name">闹钟</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon gray">⚙️</div>
+                    <div class="feature-name">设置</div>
+                </div>
+            </div>
+            
+            <div class="stats-card">
+                <div class="stats-title">今日数据</div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-value">8,562</div>
+                        <div class="stat-label">步数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">3.2</div>
+                        <div class="stat-label">公里</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">8.5h</div>
+                        <div class="stat-label">睡眠</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-bar">
+            <div class="tab-item active">
+                <span class="tab-icon">🏠</span>
+                <span class="tab-label">首页</span>
+            </div>
+            <div class="tab-item">
+                <span class="tab-icon">📍</span>
+                <span class="tab-label">定位</span>
+            </div>
+            <div class="tab-item">
+                <span class="tab-icon">💬</span>
+                <span class="tab-label">消息</span>
+            </div>
+            <div class="tab-item">
+                <span class="tab-icon">👤</span>
+                <span class="tab-label">我的</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>守护宝贝 - 设置</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif; background: #F5F7FA; }
+        .phone { max-width: 414px; margin: 0 auto; background: #F5F7FA; min-height: 100vh; position: relative; }
+        .status-bar { height: 44px; background: #4A90D9; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px 0; color: #fff; font-size: 14px; font-weight: 600; }
+        .header { background: linear-gradient(135deg, #4A90D9, #357ABD); padding: 15px 20px 25px; color: #fff; }
+        .header-top { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
+        .back-btn { font-size: 20px; }
+        .header-title { font-size: 18px; font-weight: 600; flex: 1; text-align: center; margin-right: 35px; }
+        .content { padding: 0 15px 30px; margin-top: -15px; }
+        
+        .profile-card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); display: flex; align-items: center; gap: 15px; }
+        .profile-avatar { width: 70px; height: 70px; border-radius: 50%; background: linear-gradient(135deg, #FFD93D, #F5A623); display: flex; align-items: center; justify-content: center; font-size: 36px; border: 3px solid #F0F0F0; }
+        .profile-info { flex: 1; }
+        .profile-name { font-size: 18px; font-weight: 600; color: #333; margin-bottom: 5px; }
+        .profile-id { font-size: 13px; color: #999; }
+        .profile-edit { color: #4A90D9; font-size: 14px; }
+        
+        .device-card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .device-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .device-title { font-size: 16px; font-weight: 600; color: #333; }
+        .device-status { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #7ED321; }
+        .device-info { display: flex; gap: 20px; }
+        .device-item { flex: 1; background: #F8F9FA; border-radius: 10px; padding: 12px; text-align: center; }
+        .device-icon { font-size: 20px; margin-bottom: 5px; }
+        .device-label { font-size: 11px; color: #999; margin-bottom: 3px; }
+        .device-value { font-size: 14px; color: #333; font-weight: 500; }
+        
+        .menu-group { background: #fff; border-radius: 16px; overflow: hidden; margin-bottom: 15px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .menu-item { display: flex; align-items: center; padding: 16px 15px; border-bottom: 1px solid #f5f5f5; }
+        .menu-item:last-child { border-bottom: none; }
+        .menu-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-right: 12px; }
+        .menu-icon.blue { background: #E8F4FD; }
+        .menu-icon.green { background: #E8F8E8; }
+        .menu-icon.orange { background: #FFF3E0; }
+        .menu-icon.red { background: #FFEBEE; }
+        .menu-icon.gray { background: #F5F5F5; }
+        .menu-text { flex: 1; font-size: 15px; color: #333; }
+        .menu-arrow { color: #ccc; font-size: 14px; }
+        .menu-badge { background: #D0021B; color: #fff; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-right: 8px; }
+        .menu-toggle { width: 50px; height: 28px; background: #4A90D9; border-radius: 14px; position: relative; }
+        .menu-toggle::after { content: ''; position: absolute; width: 24px; height: 24px; background: #fff; border-radius: 50%; top: 2px; right: 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .menu-toggle.off { background: #ccc; }
+        .menu-toggle.off::after { right: auto; left: 2px; }
+        
+        .logout-btn { background: #fff; border-radius: 16px; padding: 16px; text-align: center; color: #D0021B; font-size: 15px; font-weight: 500; box-shadow: 0 2px 12px rgba(0,0,0,0.06); margin-top: 20px; }
+        
+        .version-info { text-align: center; padding: 20px; font-size: 12px; color: #bbb; }
+    </style>
+</head>
+<body>
+    <div class="phone">
+        <div class="status-bar"><span>10:30</span><span>📶 5G 🔋</span></div>
+        <div class="header">
+            <div class="header-top"><span class="back-btn">←</span><span class="header-title">设置</span></div>
+        </div>
+        
+        <div class="content">
+            <div class="profile-card">
+                <div class="profile-avatar">👦</div>
+                <div class="profile-info">
+                    <div class="profile-name">小明</div>
+                    <div class="profile-id">设备编号: SW20240302001</div>
+                </div>
+                <div class="profile-edit">编辑 ></div>
+            </div>
+            
+            <div class="device-card">
+                <div class="device-header">
+                    <span class="device-title">设备状态</span>
+                    <div class="device-status"><span>●</span> 在线</div>
+                </div>
+                <div class="device-info">
+                    <div class="device-item">
+                        <div class="device-icon">🔋</div>
+                        <div class="device-label">电量</div>
+                        <div class="device-value">85%</div>
+                    </div>
+                    <div class="device-item">
+                        <div class="device-icon">📶</div>
+                        <div class="device-label">信号</div>
+                        <div class="device-value">4G</div>
+                    </div>
+                    <div class="device-item">
+                        <div class="device-icon">💾</div>
+                        <div class="device-label">存储</div>
+                        <div class="device-value">12.5G</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="menu-group">
+                <div class="menu-item">
+                    <div class="menu-icon blue">👤</div>
+                    <div class="menu-text">孩子资料</div>
+                    <div class="menu-arrow">></div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon green">📱</div>
+                    <div class="menu-text">设备管理</div>
+                    <div class="menu-arrow">></div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon orange">🔔</div>
+                    <div class="menu-text">消息通知</div>
+                    <div class="menu-toggle"></div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon gray">🔒</div>
+                    <div class="menu-text">隐私设置</div>
+                    <div class="menu-arrow">></div>
+                </div>
+            </div>
+            
+            <div class="menu-group">
+                <div class="menu-item">
+                    <div class="menu-icon blue">🆘</div>
+                    <div class="menu-text">SOS紧急联系人</div>
+                    <div class="menu-arrow">></div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon green">📶</div>
+                    <div class="menu-text">远程监听</div>
+                    <div class="menu-toggle"></div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon orange">⏰</div>
+                    <div class="menu-text">上课禁用时段</div>
+                    <div class="menu-arrow">></div>
+                </div>
+            </div>
+            
+            <div class="menu-group">
+                <div class="menu-item">
+                    <div class="menu-icon blue">❓</div>
+                    <div class="menu-text">帮助与反馈</div>
+                    <div class="menu-arrow">></div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon green">⭐</div>
+                    <div class="menu-text">关于我们</div>
+                    <div class="menu-arrow">></div>
+                </div>
+                <div class="menu-item">
+                    <div class="menu-icon gray">🔄</div>
+                    <div class="menu-text">检查更新</div>
+                    <span class="menu-badge">New</span>
+                    <div class="menu-arrow">></div>
+                </div>
+            </div>
+            
+            <div class="logout-btn">退出登录</div>
+            
+            <div class="version-info">守护宝贝 v3.2.1</div>
+        </div>
+    </div>
+</body>
+</html>

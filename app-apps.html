@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>守护宝贝 - 应用管控</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif; background: #F5F7FA; }
+        .phone { max-width: 414px; margin: 0 auto; background: #F5F7FA; min-height: 100vh; position: relative; }
+        .status-bar { height: 44px; background: #4A90D9; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px 0; color: #fff; font-size: 14px; font-weight: 600; }
+        .header { background: linear-gradient(135deg, #4A90D9, #357ABD); padding: 15px 20px 25px; color: #fff; }
+        .header-top { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
+        .back-btn { font-size: 20px; }
+        .header-title { font-size: 18px; font-weight: 600; flex: 1; text-align: center; margin-right: 35px; }
+        .header-desc { font-size: 13px; opacity: 0.9; text-align: center; }
+        .content { padding: 0 15px 30px; margin-top: -15px; }
+        
+        .usage-card { background: #fff; border-radius: 16px; padding: 20px; margin-bottom: 15px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .usage-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .usage-title { font-size: 16px; font-weight: 600; color: #333; }
+        .usage-time { font-size: 24px; font-weight: 700; color: #4A90D9; }
+        .usage-bar { height: 8px; background: #F0F0F0; border-radius: 4px; overflow: hidden; margin-bottom: 10px; }
+        .usage-progress { height: 100%; background: linear-gradient(90deg, #4A90D9, #357ABD); border-radius: 4px; width: 65%; }
+        .usage-limit { font-size: 12px; color: #999; text-align: right; }
+        
+        .section-title { font-size: 16px; font-weight: 600; color: #333; margin: 20px 0 15px; display: flex; justify-content: space-between; align-items: center; }
+        .add-app-btn { color: #4A90D9; font-size: 14px; }
+        
+        .app-list { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .app-item { display: flex; align-items: center; padding: 15px; border-bottom: 1px solid #f5f5f5; }
+        .app-item:last-child { border-bottom: none; }
+        .app-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-right: 12px; }
+        .app-icon.blue { background: #E8F4FD; }
+        .app-icon.green { background: #E8F8E8; }
+        .app-icon.orange { background: #FFF3E0; }
+        .app-icon.purple { background: #F3E5F5; }
+        .app-info { flex: 1; }
+        .app-name { font-size: 15px; color: #333; font-weight: 500; margin-bottom: 4px; }
+        .app-usage { font-size: 12px; color: #999; }
+        .app-toggle { width: 50px; height: 28px; background: #4A90D9; border-radius: 14px; position: relative; }
+        .app-toggle::after { content: ''; position: absolute; width: 24px; height: 24px; background: #fff; border-radius: 50%; top: 2px; right: 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .app-toggle.off { background: #ccc; }
+        .app-toggle.off::after { right: auto; left: 2px; }
+        .app-lock { color: #F5A623; font-size: 18px; margin-left: 10px; }
+        
+        .time-rules { background: #fff; border-radius: 16px; padding: 20px; margin-top: 15px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+        .rule-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f5f5f5; }
+        .rule-item:last-child { border-bottom: none; }
+        .rule-icon { width: 36px; height: 36px; background: #F8F9FA; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-right: 12px; }
+        .rule-info { flex: 1; }
+        .rule-name { font-size: 14px; color: #333; margin-bottom: 2px; }
+        .rule-desc { font-size: 12px; color: #999; }
+        .rule-toggle { width: 44px; height: 24px; background: #4A90D9; border-radius: 12px; position: relative; }
+        .rule-toggle::after { content: ''; position: absolute; width: 20px; height: 20px; background: #fff; border-radius: 50%; top: 2px; right: 2px; }
+    </style>
+</head>
+<body>
+    <div class="phone">
+        <div class="status-bar"><span>10:30</span><span>📶 5G 🔋</span></div>
+        <div class="header">
+            <div class="header-top"><span class="back-btn">←</span><span class="header-title">应用管控</span></div>
+            <div class="header-desc">管理孩子可使用应用及使用时长</div>
+        </div>
+        
+        <div class="content">
+            <div class="usage-card">
+                <div class="usage-header">
+                    <span class="usage-title">今日使用时长</span>
+                    <span class="usage-time">1小时18分</span>
+                </div>
+                <div class="usage-bar"><div class="usage-progress"></div></div>
+                <div class="usage-limit">每日限额 2小时 · 剩余 42分钟</div>
+            </div>
+            
+            <div class="section-title"><span>应用管理</span><span class="add-app-btn">+ 添加应用</span></div>
+            
+            <div class="app-list">
+                <div class="app-item">
+                    <div class="app-icon blue">📞</div>
+                    <div class="app-info"><div class="app-name">电话</div><div class="app-usage">今日使用 25分钟 · 无限制</div></div>
+                    <div class="app-toggle"></div>
+                </div>
+                <div class="app-item">
+                    <div class="app-icon green">💬</div>
+                    <div class="app-info"><div class="app-name">语音聊天</div><div class="app-usage">今日使用 18分钟 · 无限制</div></div>
+                    <div class="app-toggle"></div>
+                </div>
+                <div class="app-item">
+                    <div class="app-icon orange">📍</div>
+                    <div class="app-info"><div class="app-name">定位</div><div class="app-usage">后台运行 · 无限制</div></div>
+                    <div class="app-toggle"></div>
+                </div>
+                <div class="app-item">
+                    <div class="app-icon purple">🎮</div>
+                    <div class="app-info"><div class="app-name">益智游戏</div><div class="app-usage">今日使用 35分钟 · 限额30分钟</div></div>
+                    <div class="app-toggle off"></div>
+                    <div class="app-lock">🔒</div>
+                </div>
+            </div>
+            
+            <div class="time-rules">
+                <div class="section-title"><span>使用时段限制</span></div>
+                <div class="rule-item">
+                    <div class="rule-icon">🌙</div>
+                    <div class="rule-info"><div class="rule-name">夜间禁用</div><div class="rule-desc">21:00 - 次日 07:00 禁止使用</div></div>
+                    <div class="rule-toggle"></div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">📚</div>
+                    <div class="rule-info"><div class="rule-name">上课模式</div><div class="rule-desc">周一至周五 08:00-17:00 仅通话可用</div></div>
+                    <div class="rule-toggle"></div>
+                </div>
+                <div class="rule-item">
+                    <div class="rule-icon">⏰</div>
+                    <div class="rule-info"><div class="rule-name">连续使用提醒</div><div class="rule-desc">使用超过30分钟自动提醒休息</div></div>
+                    <div class="rule-toggle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>守护宝贝 - 定位详情</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif; background: #F5F7FA; }
+        .phone { max-width: 414px; margin: 0 auto; background: #F5F7FA; min-height: 100vh; position: relative; }
+        
+        .status-bar { height: 44px; background: #4A90D9; display: flex; justify-content: space-between; align-items: center; padding: 10px 20px 0; color: #fff; font-size: 14px; font-weight: 600; }
+        
+        .header { background: #4A90D9; padding: 10px 15px 15px; color: #fff; }
+        .header-top { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .back-btn { font-size: 20px; }
+        .header-title { font-size: 18px; font-weight: 600; flex: 1; text-align: center; margin-right: 35px; }
+        
+        .mode-tabs { display: flex; background: rgba(255,255,255,0.2); border-radius: 20px; padding: 4px; }
+        .mode-tab { flex: 1; padding: 8px 0; text-align: center; border-radius: 16px; font-size: 14px; }
+        .mode-tab.active { background: #fff; color: #4A90D9; font-weight: 600; }
+        
+        .map-container { height: 350px; background: linear-gradient(180deg, #E8F4FD 0%, #D4E9F7 50%, #C8E6F5 100%); position: relative; overflow: hidden; }
+        
+        .marker { position: absolute; display: flex; flex-direction: column; align-items: center; }
+        .marker-pin { width: 40px; height: 40px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+        .marker-pin::after { transform: rotate(45deg); font-size: 20px; }
+        .marker-pin.blue { background: #4A90D9; }
+        .marker-pin.blue::after { content: '👦'; }
+        .marker-pin.red { background: #D0021B; }
+        .marker-pin.red::after { content: '🏠'; }
+        .marker-pin.green { background: #7ED321; }
+        .marker-pin.green::after { content: '🏫'; }
+        .marker-label { margin-top: 8px; background: rgba(0,0,0,0.7); color: #fff; padding: 4px 10px; border-radius: 10px; font-size: 12px; white-space: nowrap; }
+        
+        .map-controls { position: absolute; right: 15px; bottom: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .control-btn { width: 44px; height: 44px; background: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.15); }
+        
+        .info-panel { background: #fff; border-radius: 20px 20px 0 0; margin-top: -20px; position: relative; z-index: 10; padding: 20px; }
+        .panel-handle { width: 40px; height: 4px; background: #ddd; border-radius: 2px; margin: 0 auto 20px; }
+        
+        .location-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .location-title { font-size: 18px; font-weight: 600; color: #333; }
+        .refresh-btn { color: #4A90D9; font-size: 14px; }
+        
+        .address-card { background: #F8F9FA; border-radius: 12px; padding: 15px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; }
+        .address-icon { width: 44px; height: 44px; background: #4A90D9; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+        .address-text { flex: 1; }
+        .address-text h4 { font-size: 15px; color: #333; margin-bottom: 4px; }
+        .address-text p { font-size: 13px; color: #999; }
+        .address-action { color: #4A90D9; font-size: 20px; }
+        
+        .quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 25px; }
+        .action-item { text-align: center; }
+        .action-btn { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .action-btn.blue { background: linear-gradient(135deg, #4A90D9, #357ABD); }
+        .action-btn.green { background: linear-gradient(135deg, #7ED321, #6BC01A); }
+        .action-btn.orange { background: linear-gradient(135deg, #F5A623, #E09400); }
+        .action-btn.red { background: linear-gradient(135deg, #D0021B, #B8001A); }
+        .action-name { font-size: 12px; color: #666; }
+        
+        .fence-section { border-top: 1px solid #eee; padding-top: 20px; }
+        .section-title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .add-btn { color: #4A90D9; font-size: 14px; font-weight: 500; }
+        
+        .fence-list { display: flex; flex-direction: column; gap: 12px; }
+        .fence-item { display: flex; align-items: center; padding: 15px; background: #F8F9FA; border-radius: 12px; }
+        .fence-icon { width: 44px; height: 44px; background: #E8F4FD; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 12px; }
+        .fence-info { flex: 1; }
+        .fence-name { font-size: 15px; color: #333; font-weight: 500; margin-bottom: 4px; }
+        .fence-range { font-size: 12px; color: #999; }
+        .fence-toggle { width: 50px; height: 28px; background: #4A90D9; border-radius: 14px; position: relative; }
+        .fence-toggle::after { content: ''; position: absolute; width: 24px; height: 24px; background: #fff; border-radius: 50%; top: 2px; right: 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body>
+    <div class="phone">
+        <div class="status-bar">
+            <span>10:30</span>
+            <span>📶 5G 🔋</span>
+        </div>
+        
+        <div class="header">
+            <div class="header-top">
+                <span class="back-btn">←</span>
+                <span class="header-title">实时定位</span>
+            </div>
+            <div class="mode-tabs">
+                <div class="mode-tab active">实时</div>
+                <div class="mode-tab">轨迹</div>
+            </div>
+        </div>
+        
+        <div class="map-container">
+            <div class="marker" style="top: 100px; left: 140px;">
+                <div class="marker-pin blue"></div>
+                <div class="marker-label">小明</div>
+            </div>
+            <div class="marker" style="top: 200px; left: 60px;">
+                <div class="marker-pin red"></div>
+                <div class="marker-label">家</div>
+            </div>
+            <div class="marker" style="top: 180px; right: 50px;">
+                <div class="marker-pin green"></div>
+                <div class="marker-label">学校</div>
+            </div>
+            
+            <div class="map-controls">
+                <div class="control-btn">📍</div>
+                <div class="control-btn">+</div>
+                <div class="control-btn">-</div>
+            </div>
+        </div>
+        
+        <div class="info-panel">
+            <div class="panel-handle"></div>
+            
+            <div class="location-header">
+                <span class="location-title">当前位置</span>
+                <span class="refresh-btn">🔄 刷新</span>
+            </div>
+            
+            <div class="address-card">
+                <div class="address-icon">📍</div>
+                <div class="address-text">
+                    <h4>北京市朝阳区实验小学</h4>
+                    <p>距离家 1.2公里 · 更新于 2分钟前</p>
+                </div>
+                <div class="address-action">🧭</div>
+            </div>
+            
+            <div class="quick-actions">
+                <div class="action-item">
+                    <div class="action-btn blue">📞</div>
+                    <div class="action-name">打电话</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-btn green">💬</div>
+                    <div class="action-name">发语音</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-btn orange">📋</div>
+                    <div class="action-name">历史轨迹</div>
+                </div>
+                <div class="action-item">
+                    <div class="action-btn red">🆘</div>
+                    <div class="action-name">远程监听</div>
+                </div>
+            </div>
+            
+            <div class="fence-section">
+                <div class="section-title">
+                    <span>电子围栏</span>
+                    <span class="add-btn">+ 添加</span>
+                </div>
+                <div class="fence-list">
+                    <div class="fence-item">
+                        <div class="fence-icon">🏠</div>
+                        <div class="fence-info">
+                            <div class="fence-name">家</div>
+                            <div class="fence-range">半径 500米 · 进入/离开提醒</div>
+                        </div>
+                        <div class="fence-toggle"></div>
+                    </div>
+                    <div class="fence-item">
+                        <div class="fence-icon">🏫</div>
+                        <div class="fence-info">
+                            <div class="fence-name">学校</div>
+                            <div class="fence-range">半径 300米 · 到达提醒</div>
+                        </div>
+                        <div class="fence-toggle"></div>
+                    </div>
+                    <div class="fence-item">
+                        <div class="fence-icon">🚫</div>
+                        <div class="fence-info">
+                            <div class="fence-name">危险区域</div>
+                            <div class="fence-range">网吧、游戏厅附近 · 进入提醒</div>
+                        </div>
+                        <div class="fence-toggle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
